@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"  
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.kh.entity.model">
+
+	<class name="UserInfo" table="kh_userinfo">
+		<cache usage="read-write" region="sampleCache2" />
+		<id name="id" column="id" length="11" type="java.lang.Integer">
+			<generator class="native"></generator>
+		</id>
+		<property name="realname" column="realname" type="java.lang.String"
+			length="50" />
+	</class>
+
+</hibernate-mapping>

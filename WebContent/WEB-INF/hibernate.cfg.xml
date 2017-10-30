@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE hibernate-configuration PUBLIC  
+        "-//Hibernate/Hibernate Configuration DTD 4.0//EN"  
+        "http://hibernate.sourceforge.net/hibernate-configuration-4.0.dtd">  
+<hibernate-configuration>  
+    <session-factory>
+          
+        <!-- 设置数据库方言 -->
+		<property name="hibernate.dialect">${hibernate.dialect}</property>
+		<!-- 设置自动创建|更新|验证数据库表结构 -->
+		<property name="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</property>
+		<!-- 是否在控制台显示sql -->
+		<property name="hibernate.show_sql">${hibernate.show_sql}</property>
+		<!-- 是否格式化sql，优化显示 -->
+		<property name="hiberante.format_sql">${hiberante.format_sql}</property>
+		<!-- 是否开启二级缓存 -->
+		<property name="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</property>
+		<!-- 是否开启查询缓存 -->
+		<property name=" hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</property>
+		<!-- 数据库批量查询最大数 -->
+		<!-- 
+		<property name="hibernate.jdbc.fetch_size">${hibernate.jdbc.fetch_size}</property>
+		-->
+		<!-- 数据库批量更新、添加、删除操作最大数 -->
+		<!-- 
+		<property name="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</property>
+		 -->
+		<!-- 是否自动提交事务 -->
+		<property name="hibernate.connection.autocommit">${hibernate.connection.autocommit}</property>
+		<!-- 指定hibernate在何时释放JDBC连接 -->
+		<property name="hibernate.connection.release_mode">${hibernate.connection.release_mode}</property>
+		<!-- 创建session方式 hibernate4.x 的方式 -->
+		<property name="hibernate.current_session_context_class">${hibernate.current_session_context_class}</property>
+		<!-- javax.persistence.validation.mode默认情况下是auto的，就是说如果不设置的话它是会自动去你的classpath下面找一个bean-validation**包 
+                   所以把它设置为none即可 -->
+        <property name="javax.persistence.validation.mode">${javax.persistence.validation.mode}</property>
+        <!-- 设置二级缓存插件EHCache的Provider类-->
+        <property name="hibernate.cache.provider_class">${hibernate.cache.provider_class}</property>
+		<!-- 二级缓存区域名的前缀 -->  
+      	<property name="hibernate.cache.region_prefix">${hibernate.cache.region_prefix}</property>
+		<!-- 高速缓存提供程序 -->
+		<property name="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</property>
+		<!-- 指定缓存配置文件位置 -->
+		<property name="hibernate.cache.provider_configuration_file_resource_path">${hibernate.cache.provider_configuration_file_resource_path}</property>
+      	<!-- 强制Hibernate以更人性化的格式将数据存入二级缓存 -->
+      	<property name="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</property>
+      	<!-- Hibernate将收集有助于性能调节的统计数据 -->
+      	<property name="hibernate.generate_statistics">${hibernate.generate_statistics}</property>
+        
+        
+    </session-factory>  
+</hibernate-configuration>  
