@@ -7,5 +7,7 @@ import com.kh.entity.model.UserInfo;
 public interface LoginMgrDao {
 
 	public List<UserInfo> queryUserIds();
+	
+	public UserInfo queryUserInfoById(int id);
 
 }

@@ -144,32 +144,28 @@
 					所以把它设置为none即可 -->
 				<prop key="javax.persistence.validation.mode">${javax.persistence.validation.mode}</prop>
 				<!-- 设置二级缓存插件EHCache的Provider类 hibernate4此属性作废 -->
-				<!-- 
-				<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
-				 -->
+				<!-- <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop> -->
 				<!-- 二级缓存区域名的前缀 -->
 				<!-- <prop key="hibernate.cache.region_prefix">${hibernate.cache.region_prefix}</prop> -->
 				<!-- 高速缓存提供程序 -->
 				<prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop>
 				<!-- 指定缓存配置文件位置 -->
-				<!-- 
-				<prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.cache.provider_configuration_file_resource_path}
-				</prop>
-				 -->
+				<!-- <prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.cache.provider_configuration_file_resource_path} 
+					</prop> -->
 				<!-- 强制Hibernate以更人性化的格式将数据存入二级缓存 -->
 				<prop key="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</prop>
 				<!-- Hibernate将收集有助于性能调节的统计数据 -->
 				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-				<!--  Hibernate分页出现 ResultSet may only be accessed in a forward direction 需要设置hibernate结果集滚动 -->
+				<!-- Hibernate分页出现 ResultSet may only be accessed in a forward direction 
+					需要设置hibernate结果集滚动 -->
 				<prop key="jdbc.use_scrollable_resultset">false</prop>
 			</props>
 		</property>
 	</bean>
-	<!-- 
+
 	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager" ref="cacheManager"></property>
 	</bean>
-	 -->
 
 	<bean id="cacheManager"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -204,5 +200,11 @@
 		<aop:advisor pointcut="execution(* com.kh.*.*.*.*.service.*.*(..))"
 			advice-ref="txAdvice" />
 	</aop:config>
+
+	<import resource="spring-*.xml" />
+
+	<import resource="com/kh/**/spring-*.xml" />
+
+	<import resource="com/kh/**/**/spring-*.xml" />
 
 </beans>

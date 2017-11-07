@@ -27,4 +27,9 @@ public class LoginMgrServiceImpl implements LoginMgrService {
 		return loginMgrDao.queryUserIds();
 	}
 
+	@Override
+	public UserInfo queryUserInfoById(int id) {
+	    return loginMgrDao.queryUserInfoById(id);
+	}
+
 }

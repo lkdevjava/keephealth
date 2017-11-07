@@ -42,18 +42,17 @@ public class LoginMgrController extends BaseController {
 	List<UserInfo> list = loginMgrService.queryUserIdList();
 	getRequest().setAttribute("list", list);
 	getRequest().setAttribute("size", list.size());
-//	ehCacheManageService.put("sampleCache3", "keephealth",
-//		"test keephealth");
+	ehCacheManageService.put("sampleCache3", "keephealth",
+		"test keephealth");
 	return "index";
     }
 
     @RequestMapping(value = "/find")
     public String find() {
-	List<UserInfo> list = loginMgrService.queryUserIdList();
-	getRequest().setAttribute("list", list);
-	getRequest().setAttribute("size", list.size());
-//	String value = ehCacheManageService.get("sampleCache3", "keephealth");
-//	System.out.println(value);
+	UserInfo user = loginMgrService.queryUserInfoById(1);
+	System.out.println(user.toString());
+	String value = ehCacheManageService.get("sampleCache3", "keephealth");
+	System.out.println(value);
 	return "index";
     }
 

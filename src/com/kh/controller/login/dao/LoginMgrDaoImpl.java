@@ -33,4 +33,13 @@ public class LoginMgrDaoImpl implements LoginMgrDao {
 	return list;
     }
 
+    @Override
+    public UserInfo queryUserInfoById(int id) {
+	Session session = sessionFactory.openSession();
+	Query query = session.createQuery("from UserInfo where id=?")
+		.setParameter(0, id);
+	UserInfo user = (UserInfo) query.setCacheable(true).uniqueResult();
+	return user;
+    }
+
 }
