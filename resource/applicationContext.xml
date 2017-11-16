@@ -27,6 +27,7 @@
 	<util:list id="propertiesResources" list-class="java.util.ArrayList">
 		<value>classpath:jdbc.properties</value>
 		<value>classpath:hibernate.properties</value>
+		<value>classpath:shiroconfig.properties</value>
 	</util:list>
 
 	<bean id="propertyCOnfigurer"
@@ -171,6 +172,10 @@
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation" value="classpath:ehcache.xml"></property>
 		<property name="shared" value="true"></property>
+	</bean>
+	
+	<bean id="ehCacheManageService" class="com.kh.common.ehcache.service.CacheManageServiceImpl">
+		<property name="ehCacheManager" ref="ehCacheManager"/>
 	</bean>
 
 	<bean id="transactionManager"

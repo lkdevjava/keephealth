@@ -19,5 +19,10 @@ public class LoginRealmImpl extends AuthorizingRealm {
 			AuthenticationToken arg0) throws AuthenticationException {
 		return null;
 	}
+	
+	@Override
+	protected void clearCache(PrincipalCollection principals) {
+		super.clearCache(principals);
+	}
 
 }
