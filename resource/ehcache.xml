@@ -44,6 +44,12 @@
 		timeToLiveSeconds="600" diskExpiryThreadIntervalSeconds="1"
 		memoryStoreEvictionPolicy="LFU">
 	</cache>
+	
+	<cache name="sessionmanager" maxElementsInMemory="1" eternal="true"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="300"
+		timeToLiveSeconds="600" diskExpiryThreadIntervalSeconds="1"
+		memoryStoreEvictionPolicy="LFU">
+	</cache>
 
 	<cache name="sampleReplicatedCache1" maxElementsInMemory="1"
 		eternal="false" timeToIdleSeconds="100" timeToLiveSeconds="100">

@@ -19,41 +19,74 @@
 	<bean id="sessionId"
 		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
 
-	<!-- session监控器,当session过期时从ehcache中去掉session缓存 -->
-	<bean id="sessionListener" class="com.kh.common.shiro.listener.ShiroSessionListenerImpl">
-		<property name="ehCacheManageService" ref="ehCacheManageService" />
-	</bean>
-	
+	<!-- 登陆验证入口 -->
 	<bean id="loginRealm" class="com.kh.common.shiro.realm.LoginRealmImpl"></bean>
-	
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="loginRealm"/>
-		<property name="cacheManager" ref="shiroCacheManage"/>
+
+	<bean id="securityManager" class="org.apache.shiro.mgt.DefaultSecurityManager">
+		<property name="realm" ref="loginRealm" />
+		<property name="cacheManager" ref="loginEhCacheManager" />
+		<property name="sessionManager" ref="sessionManager" />
 	</bean>
-	
+
 	<!-- 配置和spring共用ehcache -->
 	<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManager" ref="cacheManager"/>
+		<property name="cacheManager" ref="cacheManager" />
 	</bean>
-	
-	<!-- 配置ehcache缓存使用类 -->
-	<bean id="shiroEhcacheManager" class="com.kh.common.shiro.ehcache.ShiroEhcacheManager">
-		<property name="shiroCacheManager" ref="shiroCacheManager"/>
-		<!-- 使用的缓存名称 -->
-		<property name="cacheName" value="${shirousercachename}"/>
+
+	<!-- ehcache实现类 -->
+	<bean id="shiroCacheService" class="com.kh.common.shiro.service.ShiroCacheServiceImpl">
+		<property name="shiroCacheManager" ref="shiroCacheManager" />
 	</bean>
-	
+
+	<!-- 登陆缓存管理 -->
+	<bean id="loginEhCacheManager" class="com.kh.common.shiro.ehcache.login.LoginEhcacheManager">
+		<property name="shiroCacheService" ref="shiroCacheService" />
+	</bean>
+
+	<bean id="shiroSessionService"
+		class="com.kh.common.shiro.session.service.ShiroSessionServiceImpl">
+		<property name="cacheName" value="${shirosessioncachename}" />
+		<property name="shiroCacheManager" ref="shiroCacheManager" />
+	</bean>
+
+	<bean id="shiroSessionListener" class="com.kh.common.shiro.listener.ShiroSessionListener">
+		<property name="shiroSessionService" ref="shiroSessionService" />
+	</bean>
+
+	<bean id="shiroSessionDao" class="com.kh.common.shiro.session.dao.ShiroSessionDaoImpl"></bean>
+
+	<bean id="sessionManager" class="org.apache.shiro.session.mgt.DefaultSessionManager">
+		<property name="sessionDAO" ref="shiroSessionDao" />
+		<property name="sessionListeners">
+			<list>
+				<ref bean="shiroSessionListener" />
+			</list>
+		</property>
+		<!-- 间隔多少时间检查，不配置是60分钟 -->
+		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
+		<!-- 是否开启 检测，默认开启 -->
+		<property name="sessionValidationSchedulerEnabled" value="true" />
+		<!-- 是否删除无效的，默认也是开启 -->
+		<property name="deleteInvalidSessions" value="true" />
+	</bean>
+
+	<!-- 会话验证调度器 -->
+	<bean id="sessionValidationScheduler"
+		class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="securityManager" ref="securityManager"/>
+		<property name="securityManager" ref="securityManager" />
 		<property name="filters">
 			<!-- 定义过来器 -->
 			<util:map>
-				
+
 			</util:map>
 		</property>
 	</bean>
-	
-	<!-- Shiro生命周期处理器-->
+
+	<!-- Shiro生命周期处理器 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
 </beans>
