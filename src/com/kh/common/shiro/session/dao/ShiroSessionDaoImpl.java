@@ -15,67 +15,68 @@ import com.kh.common.shiro.session.service.ShiroSessionService;
 
 public class ShiroSessionDaoImpl extends AbstractSessionDAO {
 
-    private Log logger = LogFactory.getLog(ShiroSessionDaoImpl.class);
+	private Log logger = LogFactory.getLog(ShiroSessionDaoImpl.class);
 
-    private ShiroSessionService shiroSessionService;
+	private ShiroSessionService shiroSessionService;
 
-    public ShiroSessionService getShiroSessionService() {
-	return shiroSessionService;
-    }
-
-    public void setShiroSessionService(ShiroSessionService shiroSessionService) {
-	this.shiroSessionService = shiroSessionService;
-    }
-
-    @Override
-    public void delete(Session session) {
-	try {
-	    shiroSessionService.deleteSession(session);
-	} catch (CacheException e) {
-	    logger.error("", e);
+	public ShiroSessionService getShiroSessionService() {
+		return shiroSessionService;
 	}
-    }
 
-    @Override
-    public Collection<Session> getActiveSessions() {
-	Collection<Session> sessions = new HashSet<Session>();
-	try {
-	    sessions = shiroSessionService.getSessions();
-	} catch (CacheException e) {
-	    logger.error("", e);
+	public void setShiroSessionService(ShiroSessionService shiroSessionService) {
+		this.shiroSessionService = shiroSessionService;
 	}
-	return sessions;
-    }
 
-    @Override
-    public void update(Session session) throws UnknownSessionException {
-	try {
-	    shiroSessionService.updateSession(session);
-	} catch (CacheException e) {
-	    logger.error("", e);
+	@Override
+	public void delete(Session session) {
+		try {
+			shiroSessionService.deleteSession(session);
+		} catch (CacheException e) {
+			logger.error("", e);
+		}
 	}
-    }
 
-    @Override
-    protected Serializable doCreate(Session session) {
-	Serializable id = session.getId();
-	try {
-	    shiroSessionService.saveSession(session);
-	} catch (CacheException e) {
-	    logger.error("", e);
+	@Override
+	public Collection<Session> getActiveSessions() {
+		Collection<Session> sessions = new HashSet<Session>();
+		try {
+			sessions = shiroSessionService.getSessions();
+		} catch (CacheException e) {
+			logger.error("", e);
+		}
+		return sessions;
 	}
-	return id;
-    }
 
-    @Override
-    protected Session doReadSession(Serializable sessionId) {
-	Session session = null;
-	try {
-	    session = shiroSessionService.getSession(sessionId);
-	} catch (CacheException e) {
-	    logger.error("", e);
+	@Override
+	public void update(Session session) throws UnknownSessionException {
+		try {
+			shiroSessionService.updateSession(session);
+		} catch (CacheException e) {
+			logger.error("", e);
+		}
 	}
-	return session;
-    }
+
+	@Override
+	protected Serializable doCreate(Session session) {
+		Serializable id = generateSessionId(session);
+		assignSessionId(session, id);
+		try {
+			shiroSessionService.saveSession(session);
+		} catch (CacheException e) {
+			logger.error("", e);
+		}
+		return id;
+	}
+
+	@Override
+	protected Session doReadSession(Serializable sessionId) {
+		Session session = null;
+		try {
+			session = shiroSessionService.getSession(sessionId);
+		} catch (CacheException e) {
+			logger.error("", e);
+		}
+		return session;
+	}
 
 }

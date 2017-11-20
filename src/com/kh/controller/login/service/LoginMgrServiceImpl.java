@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.controller.login.dao.LoginMgrDao;
-import com.kh.entity.model.UserInfo;
+import com.kh.entity.model.KhUserInfo;
 
 @Service(value = "loginMgrService")
 public class LoginMgrServiceImpl implements LoginMgrService {
@@ -23,13 +23,19 @@ public class LoginMgrServiceImpl implements LoginMgrService {
 	}
 
 	@Override
-	public List<UserInfo> queryUserIdList() {
+	public List<KhUserInfo> queryUserIdList() {
 		return loginMgrDao.queryUserIds();
 	}
 
 	@Override
-	public UserInfo queryUserInfoById(int id) {
-	    return loginMgrDao.queryUserInfoById(id);
+	public KhUserInfo queryUserInfoById(int id) {
+		return loginMgrDao.queryUserInfoById(id);
+	}
+
+	@Override
+	public KhUserInfo queryUserInfoByUsernameAndPwd(String username,
+			String password) {
+		return loginMgrDao.queryUserInfoByUsernameAndPwd(username, password);
 	}
 
 }

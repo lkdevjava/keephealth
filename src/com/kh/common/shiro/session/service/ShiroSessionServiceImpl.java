@@ -17,93 +17,102 @@ import org.springframework.beans.factory.InitializingBean;
 import com.kh.common.exception.CacheException;
 
 public class ShiroSessionServiceImpl implements ShiroSessionService,
-	InitializingBean {
+		InitializingBean {
 
-    private Log logger = LogFactory.getLog(ShiroSessionServiceImpl.class);
+	private Log logger = LogFactory.getLog(ShiroSessionServiceImpl.class);
 
-    private String cacheName;
+	private String cacheName;
 
-    private EhCacheManager shiroCacheManager;
+	private EhCacheManager shiroCacheManager;
 
-    private Cache cache;
+	private Cache cache;
 
-    public String getCacheName() {
-	return cacheName;
-    }
-
-    public void setCacheName(String cacheName) {
-	this.cacheName = cacheName;
-    }
-
-    public EhCacheManager getShiroCacheManager() {
-	return shiroCacheManager;
-    }
-
-    public void setShiroCacheManager(EhCacheManager shiroCacheManager) {
-	this.shiroCacheManager = shiroCacheManager;
-    }
-
-    @Override
-    public boolean saveSession(Session session) throws CacheException {
-	Element el = cache.get(session.getId());
-	if (null == el) {
-	    cache.put(new Element(session.getId(), session));
-	    return true;
-	} else {
-	    logger.debug("缓存中已存在," + session.getId() + "**session");
-	    return false;
+	public String getCacheName() {
+		return cacheName;
 	}
-    }
 
-    @Override
-    public boolean deleteSession(Session session) throws CacheException {
-	return cache.remove(session.getId());
-    }
-
-    @Override
-    public void updateSession(Session session) throws CacheException {
-	Element el = cache.get(session.getId());
-	if (null == el) {
-	    logger.debug("缓存中不存在," + session.getId() + "**session,进行添加");
-	    cache.put(new Element(session.getId(), session));
-	} else {
-	    boolean flag = cache.remove(session.getId());
-	    if (flag) {
-		logger.debug("成功删除" + session.getId() + "**sesssion信息");
-		cache.put(new Element(session.getId(), session));
-	    } else {
-		logger.debug("删除" + session.getId() + "**sesssion信息失败");
-		throw new CacheException("修改时,删除缓存信息失败");
-	    }
+	public void setCacheName(String cacheName) {
+		this.cacheName = cacheName;
 	}
-    }
 
-    @Override
-    public Session getSession(Serializable id) throws CacheException {
-	return (Session) cache.get(id).getObjectValue();
-    }
-
-    @Override
-    public Collection<Session> getSessions() throws CacheException {
-	HashSet<Session> sessions = new HashSet<Session>();
-	@SuppressWarnings("unchecked")
-	List<Serializable> keys = cache.getKeys();
-	if (keys != null && keys.size() > 0) {
-	    for (Serializable key : keys) {
-		sessions.add((Session) cache.get(key));
-	    }
+	public EhCacheManager getShiroCacheManager() {
+		return shiroCacheManager;
 	}
-	return sessions;
-    }
 
-    @Override
-    public int size() throws CacheException {
-	return cache.getSize();
-    }
+	public void setShiroCacheManager(EhCacheManager shiroCacheManager) {
+		this.shiroCacheManager = shiroCacheManager;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-	cache = shiroCacheManager.getCacheManager().getCache(cacheName);
-    }
+	@Override
+	public boolean saveSession(Session session) throws CacheException {
+		Element el = cache.get(session.getId());
+		if (null == el) {
+			cache.put(new Element(session.getId(), session));
+			cache.flush();
+			return true;
+		} else {
+			logger.debug("缓存中已存在," + session.getId() + "**session");
+			return false;
+		}
+	}
+
+	@Override
+	public boolean deleteSession(Session session) throws CacheException {
+		boolean flag = cache.remove(session.getId());
+		cache.flush();
+		return flag;
+	}
+
+	@Override
+	public void updateSession(Session session) throws CacheException {
+		Element el = cache.get(session.getId());
+		if (null == el) {
+			logger.debug("缓存中不存在," + session.getId() + "**session,进行添加");
+			cache.put(new Element(session.getId(), session));
+		} else {
+			boolean flag = cache.remove(session.getId());
+			if (flag) {
+				logger.debug("成功删除" + session.getId() + "**sesssion信息");
+				cache.put(new Element(session.getId(), session));
+			} else {
+				logger.debug("删除" + session.getId() + "**sesssion信息失败");
+				throw new CacheException("修改时,删除缓存信息失败");
+			}
+		}
+		cache.flush();
+	}
+
+	@Override
+	public Collection<Session> getSessions() throws CacheException {
+		HashSet<Session> sessions = new HashSet<Session>();
+		@SuppressWarnings("unchecked")
+		List<Serializable> keys = cache.getKeys();
+		if (keys != null && keys.size() > 0) {
+			for (Serializable key : keys) {
+				Element el = cache.get(key);
+				sessions.add((Session) el.getObjectValue());
+			}
+		}
+		cache.flush();
+		return sessions;
+	}
+
+	@Override
+	public Session getSession(Serializable id) throws CacheException {
+		Element el = cache.get(id);
+		Session sesison = (Session) el.getObjectValue();
+		cache.flush();
+		return sesison;
+	}
+
+	@Override
+	public int size() throws CacheException {
+		return cache.getSize();
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		cache = shiroCacheManager.getCacheManager().getCache(cacheName);
+	}
 
 }

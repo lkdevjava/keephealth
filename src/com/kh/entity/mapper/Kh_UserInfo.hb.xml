@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"  
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.kh.entity.model">
+
+	<class name="KhUserInfo" table="kh_userinfo" lazy="false">
+		<cache usage="read-write" region="sampleCache2" />
+		<id name="id" column="id" length="11" type="java.lang.Integer">
+			<generator class="native"></generator>
+		</id>
+		<property name="realname" column="realname" type="java.lang.String"
+			length="50" />
+		<property name="username" column="username" type="java.lang.String" length="50"/>
+		<property name="password" column="password" type="java.lang.String" length="200"/>
+		<property name="status" column="status" type="java.lang.Integer" length="1"/>
+		<property name="appkey" column="appkey" type="java.lang.String" length="500"/>
+		<property name="createtime" column="createtime" type="java.sql.Timestamp"/>
+		<property name="updatetime" column="updatetime" type="java.sql.Timestamp"/>
+		<property name="lastlogintime" column="lastlogintime" type="java.sql.Timestamp"/>
+	</class>
+
+</hibernate-mapping>
