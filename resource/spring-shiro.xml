@@ -96,7 +96,10 @@
 		</property>
 		<property name="filterChainDefinitions">
 		    <value>
-		        keephealth/**=anon
+		        js/**=anon
+		        css/**=anon
+		        image/**=anon
+		        /login=authc 
 		    </value>
 		</property>
 	</bean>
