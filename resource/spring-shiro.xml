@@ -37,12 +37,12 @@
 	</bean>
 
 	<!-- ehcache实现类 -->
-	<bean id="shiroCacheService" class="com.kh.common.shiro.service.ShiroCacheServiceImpl">
+	<bean id="shiroCacheService" class="com.kh.common.shiro.login.service.ShiroCacheServiceImpl">
 		<property name="shiroCacheManager" ref="shiroCacheManager" />
 	</bean>
 
 	<!-- 登陆缓存管理 -->
-	<bean id="loginEhCacheManager" class="com.kh.common.shiro.ehcache.login.LoginEhcacheManager">
+	<bean id="loginEhCacheManager" class="com.kh.common.shiro.login.cachemanager.LoginEhcacheManager">
 		<property name="shiroCacheService" ref="shiroCacheService" />
 	</bean>
 
@@ -106,6 +106,7 @@
 		        js/**=anon
 		        css/**=anon
 		        image/**=anon
+		        /**=login
 		        <!-- 
 		        /login=authc
 		         -->

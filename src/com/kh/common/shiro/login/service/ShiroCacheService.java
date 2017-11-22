@@ -1,4 +1,4 @@
-package com.kh.common.shiro.service;
+package com.kh.common.shiro.login.service;
 
 import org.apache.shiro.cache.Cache;
 
