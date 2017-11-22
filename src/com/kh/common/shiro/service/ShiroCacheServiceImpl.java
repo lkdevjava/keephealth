@@ -18,7 +18,7 @@ public class ShiroCacheServiceImpl implements ShiroCacheService {
     }
 
     @Override
-    public <K, V> Cache<K, V> getcCache(String cacheName) {
+    public <K, V> Cache<K, V> getCache(String cacheName) {
 	return new ShiroEhcacheManager<K, V>(cacheName, shiroCacheManager);
     }
 

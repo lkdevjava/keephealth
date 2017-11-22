@@ -26,7 +26,7 @@ public class LoginEhcacheManager implements CacheManager, Destroyable {
 
     @Override
     public <K, V> Cache<K, V> getCache(String cacheName) throws CacheException {
-	return shiroCacheService.getcCache(cacheName);
+	return shiroCacheService.getCache(cacheName);
     }
 
 }

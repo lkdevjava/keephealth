@@ -100,7 +100,10 @@ public class ShiroSessionServiceImpl implements ShiroSessionService,
 	@Override
 	public Session getSession(Serializable id) throws CacheException {
 		Element el = cache.get(id);
-		Session sesison = (Session) el.getObjectValue();
+		Session sesison = null;
+		if(el!=null){
+		    sesison = (Session) el.getObjectValue();
+		}
 		cache.flush();
 		return sesison;
 	}

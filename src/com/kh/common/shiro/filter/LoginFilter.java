@@ -15,14 +15,14 @@ public class LoginFilter extends AccessControlFilter {
     protected boolean isAccessAllowed(ServletRequest request,
 	    ServletResponse response, Object mappedValue) throws Exception {
 	logger.info("---------------isAccessAllowed");
-	return false;
+	return true;
     }
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response)
 	    throws Exception {
 	logger.info("---------------onAccessDenied");
-	return false;
+	return true;
     }
 
 }

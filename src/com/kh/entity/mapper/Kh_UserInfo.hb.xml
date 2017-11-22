@@ -5,7 +5,7 @@
 <hibernate-mapping package="com.kh.entity.model">
 
 	<class name="KhUserInfo" table="kh_userinfo" lazy="false">
-		<cache usage="read-write" region="sampleCache2" />
+		<cache usage="read-write" region="khuserinfo" />
 		<id name="id" column="id" length="11" type="java.lang.Integer">
 			<generator class="native"></generator>
 		</id>

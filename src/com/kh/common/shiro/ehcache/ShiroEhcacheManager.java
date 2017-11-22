@@ -1,7 +1,12 @@
 package com.kh.common.shiro.ehcache;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import net.sf.ehcache.Element;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -18,7 +23,7 @@ public class ShiroEhcacheManager<K, V> implements Cache<K, V> {
 
     private String cacheName;
 
-    private Cache<K, V> cache;
+    private net.sf.ehcache.Cache cache;
 
     public ShiroEhcacheManager(String cacheName,
 	    EhCacheManager shiroCacheManager) {
@@ -42,52 +47,82 @@ public class ShiroEhcacheManager<K, V> implements Cache<K, V> {
 	this.cacheName = cacheName;
     }
 
-    public Cache<K, V> getCache() throws CacheException {
+    public net.sf.ehcache.Cache getCache() throws CacheException {
 	if (StringUtils.isBlank(cacheName)) {
-	    logger.info("shiro没有设置缓存对象名称");
+	    logger.debug("shiro没有设置缓存对象名称");
 	    throw new CacheException("shiro not set cache name");
 	}
 	if (null == cache) {
-	    logger.info("shiro缓存对象不存在,获取" + cacheName + "缓存对象");
-	    return shiroCacheManager.getCache(cacheName);
+	    logger.debug("shiro缓存对象不存在,获取" + cacheName + "缓存对象");
+	    cache = shiroCacheManager.getCacheManager().getCache(cacheName);
 	}
-	logger.info("shiro缓存对象已存在");
+	logger.debug("shiro缓存对象已存在");
 	return cache;
     }
 
     @Override
     public void clear() throws CacheException {
-	getCache().clear();
+	getCache().removeAll();
+	getCache().flush();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public V get(K key) throws CacheException {
-	return getCache().get(key);
+	Element el = getCache().get(key);
+	V v = null;
+	if (el != null) {
+	    v = (V) el.getObjectValue();
+	}
+	getCache().flush();
+	return v;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Set<K> keys() {
-	return getCache().keys();
+	Set<K> keys = new HashSet<K>();
+	keys.addAll(getCache().getKeys());
+	getCache().flush();
+	return keys;
     }
 
     @Override
     public V put(K key, V value) throws CacheException {
-	return getCache().put(key, value);
+	getCache().put(new Element(key, value));
+	getCache().flush();
+	return value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public V remove(K key) throws CacheException {
-	return getCache().remove(key);
+	Element el = getCache().get(key);
+	boolean success = getCache().remove(key);
+	getCache().flush();
+	if (success) {
+	    return el != null ? (V) el.getObjectValue() : null;
+	}
+	return null;
     }
 
     @Override
     public int size() {
-	return getCache().size();
+	return getCache().getSize();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Collection<V> values() {
-	return getCache().values();
+	List<V> values = new ArrayList<V>();
+	List<K> keys = getCache().getKeys();
+	if (keys != null && keys.size() > 0) {
+	    for (K key : keys) {
+		values.add((V) getCache().get(key).getObjectValue());
+	    }
+	}
+	getCache().flush();
+	return values;
     }
 
 }

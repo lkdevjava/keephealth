@@ -44,11 +44,23 @@
 		timeToLiveSeconds="600" diskExpiryThreadIntervalSeconds="1"
 		memoryStoreEvictionPolicy="LFU">
 	</cache>
-	
+
 	<cache name="sessionmanager" maxElementsInMemory="1" eternal="true"
-		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="300"
-		timeToLiveSeconds="600" diskExpiryThreadIntervalSeconds="1"
-		memoryStoreEvictionPolicy="LFU">
+		diskSpoolBufferSizeMB="60" overflowToDisk="true" diskPersistent="true"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		diskExpiryThreadIntervalSeconds="1" memoryStoreEvictionPolicy="LFU">
+	</cache>
+
+	<cache name="authenticationtoken" maxElementsInMemory="1"
+		eternal="true" diskSpoolBufferSizeMB="60" overflowToDisk="true"
+		diskPersistent="true" timeToIdleSeconds="300" timeToLiveSeconds="600"
+		diskExpiryThreadIntervalSeconds="1" memoryStoreEvictionPolicy="LFU">
+	</cache>
+
+	<cache name="khuserinfo" maxElementsInMemory="1" eternal="true"
+		diskSpoolBufferSizeMB="50" overflowToDisk="true" diskPersistent="true"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		diskExpiryThreadIntervalSeconds="1" memoryStoreEvictionPolicy="LFU">
 	</cache>
 
 	<cache name="sampleReplicatedCache1" maxElementsInMemory="1"

@@ -20,7 +20,10 @@
 		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
 
 	<!-- 登陆验证入口 -->
-	<bean id="loginRealm" class="com.kh.common.shiro.realm.LoginRealmImpl"></bean>
+	<bean id="loginRealm" class="com.kh.common.shiro.realm.LoginRealmImpl">
+		<property name="authenticationCacheName" value="${authenticationCacheName}"/>
+		<property name="authenticationCachingEnabled" value="true"/>
+	</bean>
 
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="loginRealm" />
@@ -57,9 +60,13 @@
 	    <property name="shiroSessionService" ref="shiroSessionService"/>
 	    <property name="sessionIdGenerator" ref="sessionId"/>
 	</bean>
+	
+	<bean id="shiroSessionFactory" class="com.kh.common.shiro.model.ShiroSessionFactory">
+	</bean>
 
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<property name="sessionDAO" ref="shiroSessionDao" />
+		<property name="SessionFactory" ref="shiroSessionFactory"/>
 		<property name="sessionListeners">
 			<list>
 				<ref bean="shiroSessionListener" />
@@ -99,7 +106,9 @@
 		        js/**=anon
 		        css/**=anon
 		        image/**=anon
-		        /login=authc 
+		        <!-- 
+		        /login=authc
+		         -->
 		    </value>
 		</property>
 	</bean>
