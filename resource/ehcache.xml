@@ -5,22 +5,25 @@
 
 	<diskStore path="D:/kh/cache" />
 
+
+<!-- 
 	<transactionManagerLookup
 		class="net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup"
 		properties="jndiName=java:/TransactionManager" propertySeparator=";" />
-
 	<cacheManagerEventListenerFactory
 		class="" properties="" />
+ -->
 
 	<cacheManagerPeerProviderFactory
 		class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
 		properties="peerDiscovery=automatic,
                         multicastGroupAddress=230.0.0.1,
-                        multicastGroupPort=4446, timeToLive=1"
+                        multicastGroupPort=4446, timeToLive=32, multicastPacketTimeToLive=32"
 		propertySeparator="," />
 
 	<cacheManagerPeerListenerFactory
-		class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory" />
+		class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+		properties="port=4003" />
 
 	<defaultCache maxElementsInMemory="1" eternal="false"
 		overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="120"
@@ -33,28 +36,53 @@
 		maxElementsOnDisk="1000" eternal="false" diskSpoolBufferSizeMB="20"
 		timeToIdleSeconds="300" timeToLiveSeconds="600"
 		memoryStoreEvictionPolicy="LFU" transactionalMode="off">
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory
+			class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory" />
 	</cache>
 
 	<cache name="sampleCache2" maxElementsInMemory="1"
 		overflowToDisk="true" eternal="true" diskExpiryThreadIntervalSeconds="1"
-		memoryStoreEvictionPolicy="LFU" />
+		memoryStoreEvictionPolicy="LFU">
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory
+			class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory" />
+	</cache>
 
 	<cache name="sampleCache3" maxElementsInMemory="1" eternal="true"
 		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="300"
 		timeToLiveSeconds="600" diskExpiryThreadIntervalSeconds="1"
 		memoryStoreEvictionPolicy="LFU">
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory
+			class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory" />
 	</cache>
 
 	<cache name="sessionmanager" maxElementsInMemory="1" eternal="true"
 		diskSpoolBufferSizeMB="60" overflowToDisk="true" diskPersistent="true"
 		timeToIdleSeconds="300" timeToLiveSeconds="600"
 		diskExpiryThreadIntervalSeconds="1" memoryStoreEvictionPolicy="LFU">
+		<!-- 
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory
+			class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory" />
+		 -->
 	</cache>
 
 	<cache name="authenticationtoken" maxElementsInMemory="1"
 		eternal="true" diskSpoolBufferSizeMB="60" overflowToDisk="true"
 		diskPersistent="true" timeToIdleSeconds="300" timeToLiveSeconds="600"
 		diskExpiryThreadIntervalSeconds="1" memoryStoreEvictionPolicy="LFU">
+		<!-- 
+		<cacheEventListenerFactory
+			class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" />
+		<bootstrapCacheLoaderFactory
+			class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory" />
+		 -->
 	</cache>
 
 	<cache name="khuserinfo" maxElementsInMemory="1" eternal="true"
