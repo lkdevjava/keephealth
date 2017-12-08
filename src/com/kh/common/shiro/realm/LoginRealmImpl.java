@@ -35,10 +35,16 @@ public class LoginRealmImpl extends AuthorizingRealm {
     public void setLoginMgrService(LoginMgrService loginMgrService) {
 	this.loginMgrService = loginMgrService;
     }
+    
+    @Override
+    public String getName() {
+    	return "loginRealm";
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(
 	    PrincipalCollection principal) {
+    	System.out.println("-------------------xxxxxxxxxxxxxxxxxxxx----------------------");
 	KhUserInfo userInfo = (KhUserInfo) SecurityUtils.getSubject()
 		.getPrincipal();
 	SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
@@ -61,7 +67,7 @@ public class LoginRealmImpl extends AuthorizingRealm {
 	    throw new DisabledAccountException("帐号已经禁止登录！");
 	}
 	return new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(),
-		userInfo.getUsername());
+		getName());
     }
 
     @Override

@@ -23,6 +23,7 @@
 	<bean id="loginRealm" class="com.kh.common.shiro.realm.LoginRealmImpl">
 		<property name="authenticationCacheName" value="${authenticationCacheName}"/>
 		<property name="authenticationCachingEnabled" value="true"/>
+		<property name="authorizationCachingEnabled" value="false"/>
 	</bean>
 
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -92,6 +93,7 @@
 	</bean>
 	
 	<bean id="loginFilter" class="com.kh.common.shiro.filter.LoginFilter"></bean>
+	<bean id="permissionFilter" class="com.kh.common.shiro.filter.PermissionFilter"></bean>
 
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
@@ -99,6 +101,7 @@
 			<!-- 定义过来器 -->
 			<util:map>
 				<entry key="login" value-ref="loginFilter"/>
+				<entry key="permission" value-ref="permissionFilter"/>
 			</util:map>
 		</property>
 		<property name="filterChainDefinitions">
@@ -109,6 +112,7 @@
 		        <!-- 
 		        /login=authc
 		         -->
+		         /test=permission
 		    </value>
 		</property>
 	</bean>
