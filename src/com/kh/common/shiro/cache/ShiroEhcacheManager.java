@@ -1,4 +1,4 @@
-package com.kh.common.shiro.ehcache;
+package com.kh.common.shiro.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;

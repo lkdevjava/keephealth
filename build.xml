@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="keephealth" default="compile" basedir=".">
+	<property name="bulild.path" value="build"/>
+	<property name="src" value="src"/>
+	<property name="buildclasses" value="${bulild.path}/classes"/>
+	<property name="buildsrc" value="${bulild.path}/src"/>
+	<path id="jarfile">
+		<fileset file="./WebContent/WEB-INF/lib/*.jar"/>
+	</path>
+	<target name="deleteall">
+		<delete dir="${bulild.path}/**"/>
+	</target>
+	<target name="copysrc" depends="createbuildsrc">
+		<copy todir="${buildsrc}">
+			<fileset dir="${src}"/>
+		</copy>
+	</target>
+	<target name="createbuildsrc" depends="deleteall">
+		<mkdir dir="${buildsrc}"/>
+	</target>
+	<target name="createbuildclasses" depends="copysrc">
+		<mkdir dir="${buildclasses}"/>
+	</target>
+	<target name="javac" depends="createbuildclasses">
+		<javac srcdir="${buildsrc}" destdir="${buildclasses}" includeantruntime="true">
+			<classpath refid="jarfile"></classpath>
+		</javac>
+	</target>
+	<target name="copyxml" depends="javac">
+		<copy todir="${buildclasses}/com/kh/entity/mapper">
+			<fileset file="${buildsrc}/com/kh/entity/mapper/**.xml"></fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="copyxml">
+		<jar destfile="${bulild.path}/keephealth.jar" basedir="${buildclasses}"/>
+		<delete dir="${bulild.path}/classes"/>
+		<delete dir="${bulild.path}/src"/>
+	</target>
+	
+</project>

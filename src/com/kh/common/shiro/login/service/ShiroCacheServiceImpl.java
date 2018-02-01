@@ -1,9 +1,9 @@
-package com.kh.common.shiro.service;
+package com.kh.common.shiro.login.service;
 
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 
-import com.kh.common.shiro.ehcache.ShiroEhcacheManager;
+import com.kh.common.shiro.cache.ShiroEhcacheManager;
 
 public class ShiroCacheServiceImpl implements ShiroCacheService {
 
