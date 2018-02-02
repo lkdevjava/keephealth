@@ -48,5 +48,6 @@ public class SysPropertiesConfig extends PropertyPlaceholderConfigurer {
 		System.out.println(AESTools.encrypt("jdbc:mysql://127.0.0.1:3306/apppay?useUnicode=true&characterEncoding=UTF-8", password));
 		System.out.println(AESTools.encrypt("root", password));
 		System.out.println(AESTools.encrypt("likun", password));
+		System.out.println(AESTools.getAESKeyOfBase64String("easyshopteam210180202"));
 	}
 }

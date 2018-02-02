@@ -3,31 +3,38 @@ package com.kh.common.encript;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+
+import sun.misc.BASE64Encoder;
 
 public class AESTools {
 
 	/**
 	 * 实现：AES加密
+	 * 
 	 * @param content
 	 * @param password
 	 * @return
 	 */
 	public static String encrypt(String content, String password) {
 		try {
-//			byte[] raw = password.getBytes("utf-8");
-	        SecretKeySpec skeySpec = new SecretKeySpec(hex2byte(password), "AES");
-	        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");//"算法/模式/补码方式"
-	        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-	        byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));
-	        return new Base64().encodeToString(encrypted);
+			// byte[] raw = password.getBytes("utf-8");
+			SecretKeySpec skeySpec = new SecretKeySpec(hex2byte(password),
+					"AES");
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");// "算法/模式/补码方式"
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+			byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));
+			return new Base64().encodeToString(encrypted);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
@@ -43,20 +50,23 @@ public class AESTools {
 		}
 		return "";
 	}
+
 	/**
 	 * 解密
+	 * 
 	 * @param content
 	 * @param password
 	 * @return
 	 */
 	public static String decrypt(byte[] content, String password) {
 		try {
-			SecretKeySpec skeySpec = new SecretKeySpec(hex2byte(password), "AES");
+			SecretKeySpec skeySpec = new SecretKeySpec(hex2byte(password),
+					"AES");
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 			cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-			byte[] encrypted1 = new Base64().decode(content);//先用base64解密
+			byte[] encrypted1 = new Base64().decode(content);// 先用base64解密
 			byte[] original = cipher.doFinal(encrypted1);
-			return new String(original,"utf-8");
+			return new String(original, "utf-8");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
@@ -72,21 +82,33 @@ public class AESTools {
 		}
 		return null;
 	}
-	private static byte[] hex2byte(String hexStr){
+
+	private static byte[] hex2byte(String hexStr) {
 		if (hexStr.length() % 2 == 0) {
 			return hex2byte(hexStr.getBytes(), 0, hexStr.length() >> 1);
 		}
 		return hex2byte("0" + hexStr);
 	}
+
 	private static byte[] hex2byte(byte[] b, int offset, int len) {
 		byte[] d = new byte[len];
 		for (int i = 0; i < len * 2; i++) {
 			int shift = i % 2 == 1 ? 0 : 4;
 			int tmp30_29 = (i >> 1);
-			byte[] tmp30_25 = d; tmp30_25[tmp30_29] = (byte)(tmp30_25[tmp30_29] | Character.digit((char)b[(offset + i)], 16) << shift);
+			byte[] tmp30_25 = d;
+			tmp30_25[tmp30_29] = (byte) (tmp30_25[tmp30_29] | Character.digit(
+					(char) b[(offset + i)], 16) << shift);
 		}
 		return d;
 	}
+
+	/**
+	 * 根据特定字符生成16进制字符密钥
+	 * 
+	 * @param key
+	 *            生成密钥字符
+	 * @return 密钥
+	 */
 	public static String parseByte2HexStr(byte[] buf) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < buf.length; i++) {
@@ -98,5 +120,42 @@ public class AESTools {
 		}
 		return sb.toString();
 	}
-	
+
+	/**
+	 * 根据特定字符生成base64字符密钥
+	 * 
+	 * @param key
+	 *            生成密钥字符
+	 * @return 密钥
+	 */
+	public static String getAESKeyOfHexString(String key) {
+		try {
+			KeyGenerator kg = KeyGenerator.getInstance("AES");
+			// kg.init(128);//要生成多少位，只需要修改这里即可128, 192或256
+			// SecureRandom是生成安全随机数序列，password.getBytes()是种子，只要种子相同，序列就一样，所以生成的秘钥就一样。
+			kg.init(128, new SecureRandom(key.getBytes()));
+			SecretKey sk = kg.generateKey();
+			byte[] bytes = sk.getEncoded();
+			return parseByte2HexStr(bytes);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public static String getAESKeyOfBase64String(String key) {
+		try {
+			BASE64Encoder base64 = new BASE64Encoder();
+			KeyGenerator kg = KeyGenerator.getInstance("AES");
+			// kg.init(128);//要生成多少位，只需要修改这里即可128, 192或256
+			// SecureRandom是生成安全随机数序列，password.getBytes()是种子，只要种子相同，序列就一样，所以生成的秘钥就一样。
+			kg.init(128, new SecureRandom(key.getBytes()));
+			SecretKey sk = kg.generateKey();
+			byte[] bytes = sk.getEncoded();
+			return base64.encode(bytes);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 }
